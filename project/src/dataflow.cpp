@@ -32,8 +32,7 @@ namespace llvm {
     }
 
     /* Apply analysis on Function F */
-    DataFlowResult DataFlow::run(Function &F, std::vector<void*> domain,
-                                 BitVector boundaryCond, BitVector initCond) {
+    DataFlowResult DataFlow::run(Function &F, std::vector<void*> domain, BitVector boundaryCond, BitVector initCond) {
         std::map<BasicBlock*, BlockResult> result;
         bool modified = false;
 
