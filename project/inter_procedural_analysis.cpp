@@ -51,3 +51,6 @@ template<class M, class N, class A>
 std::unordered_map<M, Context<M, N, A>> InterProceduralAnalysis<M, N, A>::getTargets(CallSite<M, N, A> call_site) {
   return context_transitions.getTargets(call_site);
 }
+
+// Define the class here so that main file can use
+template class InterProceduralAnalysis<int, int, int>;

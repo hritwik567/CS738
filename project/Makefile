@@ -4,7 +4,7 @@ CFLAGS = -c -Iinclude/
 
 all: main virtual
 
-virtual: inter_procedural_analysis.o
+virtual: inter_procedural_analysis.o forward_inter_procedural_analysis.o
 
 main: $(OBJECTS)
 	$(CXX) -o main $(OBJECTS)
