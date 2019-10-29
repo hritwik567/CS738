@@ -7,6 +7,8 @@ int Context<int, int, int>::count = 0;
 
 int main() {
 	ContextTransitionTable<int, int, int> c;
-	cout << "Hello World!" << endl;
+	Context<int, int, int> c1(0);
+	cout << "Hello World!" << c1.getId()  << endl;
+	c.sayHello();
 	return 0;
 }

@@ -34,6 +34,7 @@ class ContextTransitionTable {
   public:
     ContextTransitionTable() { }
 
+		void sayHello(void);
     void addTransition(CallSite<M, N, A> call_site, Context<M, N, A>* target_context);
     std::unordered_map<Context<M, N, A>, std::unordered_set<CallSite<M, N, A>>> getCallers(void);
     std::unordered_set<CallSite<M, N, A>> getCallers(Context<M,N,A> target);

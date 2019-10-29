@@ -18,11 +18,12 @@ class Context {
     bool analysed;
 
   public:
+    Context(); // Just for the pair CallSite
     Context(M method);
     Context(M method, N node);
     bool operator==(const Context& c) const;
 
-    int getId(void);
+    int getId(void) const;
     M getMethod(void);
     N getNode(void);
     A getEntryValue(void);

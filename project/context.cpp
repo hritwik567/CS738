@@ -1,6 +1,11 @@
 #include "context.h"
 
 template<class M, class N, class A>
+Context<M, N, A>::Context(): analysed(false) {
+	id = ++count;
+}
+
+template<class M, class N, class A>
 Context<M, N, A>::Context(M method): method(method), analysed(false) {
 	id = ++count;
 }
@@ -16,7 +21,7 @@ bool Context<M, N, A>::operator==(const Context<M, N, A>& c) const {
 }
 
 template<class M, class N, class A>
-int Context<M, N, A>::getId(void) {
+int Context<M, N, A>::getId(void) const {
 	return id;
 }
 
@@ -80,3 +85,6 @@ void Context<M, N, A>::setExitValue(A _exit_value) {
 	exit_value = _exit_value;
 	return;
 }
+
+// Define the class here so that main file can use
+template class Context<int, int, int>;
