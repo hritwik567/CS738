@@ -18,6 +18,7 @@ class Context {
     bool analysed;
 
   public:
+    bool is_null;
     Context(); // Just for the pair CallSite
     Context(M method);
     Context(M method, N node);

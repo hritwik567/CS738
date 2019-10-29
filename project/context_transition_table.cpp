@@ -1,18 +1,18 @@
 #include "context_transition_table.h"
 
 template<class M, class N, class A>
-void ContextTransitionTable<M, N, A>::addTransition(CallSite<M, N, A> call_site, Context<M, N, A>* target_context) {
-	if(target_context != NULL) {
-			M target_method = target_context->getMethod();
+void ContextTransitionTable<M, N, A>::addTransition(CallSite<M, N, A> call_site, Context<M, N, A> target_context) {
+	if(!target_context.is_null) {
+			M target_method = target_context.getMethod();
 
 			if(transitions.find(call_site) != transitions.end() && transitions[call_site].find(target_method) != transitions[call_site].end()) {
 				Context<M,N,A> old_target = transitions[call_site][target_method];
 				callers[old_target].erase(call_site);
 			}
 
-			transitions[call_site][target_method] = *target_context;
+			transitions[call_site][target_method] = target_context;
 
-			callers[*target_context].insert(call_site);
+			callers[target_context].insert(call_site);
 	} else {
 				if(transitions.find(call_site) != transitions.end()) {
 				for (auto e: transitions[call_site]) {

@@ -1,17 +1,17 @@
 #include "context.h"
 
 template<class M, class N, class A>
-Context<M, N, A>::Context(): analysed(false) {
+Context<M, N, A>::Context(): analysed(false), is_null(true) {
 	id = ++count;
 }
 
 template<class M, class N, class A>
-Context<M, N, A>::Context(M method): method(method), analysed(false) {
+Context<M, N, A>::Context(M method): method(method), analysed(false), is_null(false) {
 	id = ++count;
 }
 
 template<class M, class N, class A>
-Context<M, N, A>::Context(M method, N node): method(method), node(node), analysed(false) {
+Context<M, N, A>::Context(M method, N node): method(method), node(node), analysed(false), is_null(false) {
 	id = ++count;
 }
 
