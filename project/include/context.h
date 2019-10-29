@@ -35,4 +35,14 @@ class Context {
     void setEntryValue(A _entry_value);
     void setExitValue(A _exit_value);
 };
+
+namespace std {
+	template<class M, class N, class A>
+	struct hash<Context<M, N, A>> {
+		size_t operator()(const Context<M, N, A>& c) const {
+			return hash<int>()(c.getId());
+		}
+	};
+}
+
 #endif

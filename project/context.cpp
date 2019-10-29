@@ -15,15 +15,6 @@ bool Context<M, N, A>::operator==(const Context<M, N, A>& c) const {
 	return id == c.getId();
 }
 
-namespace std {
-	template<class M, class N, class A>
-	struct hash<Context<M, N, A>> {
-		size_t operator()(const Context<M, N, A>& c) const {
-			return hash<int>()(c.getId());
-		}
-	};
-}
-
 template<class M, class N, class A>
 int Context<M, N, A>::getId(void) {
 	return id;
