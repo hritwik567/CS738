@@ -6,12 +6,7 @@ Context<M, N, A>::Context(): analysed(false), is_null(true) {
 }
 
 template<class M, class N, class A>
-Context<M, N, A>::Context(M method): method(method), analysed(false), is_null(false) {
-	id = ++count;
-}
-
-template<class M, class N, class A>
-Context<M, N, A>::Context(M method, N node): method(method), node(node), analysed(false), is_null(false) {
+Context<M, N, A>::Context(M method, bool reverse): method(method), analysed(false), is_null(false), reverse(reverse) {
 	id = ++count;
 }
 
@@ -31,8 +26,15 @@ M Context<M, N, A>::getMethod(void) {
 }
 
 template<class M, class N, class A>
-N Context<M, N, A>::getNode(void) {
+N Context<M, N, A>::getControlFlowGraph(void) {
+	// TODO: Need to update this to return an iterator or a vector
 	return node;
+}
+
+template<class M, class N, class A>
+N Context<M, N, A>::getEntryNode(void) {
+	// TODO: Need to update this to return the entry node based on the method
+	return &method->getEntryBlock();
 }
 
 template<class M, class N, class A>
@@ -47,14 +49,12 @@ A Context<M, N, A>::getExitValue(void) {
 
 template<class M, class N, class A>
 A Context<M, N, A>::getValueBefore(N node) {
-	// TODO: Implement this not sure what exactly is this
-	return entry_value;
+	return in_values[node];
 }
 
 template<class M, class N, class A>
 A Context<M, N, A>::getValueAfter(N node) {
-	// TODO: Implement this not sure what exactly is this
-	return exit_value;
+	return out_values[node];
 }
 
 template<class M, class N, class A>
@@ -86,5 +86,24 @@ void Context<M, N, A>::setExitValue(A _exit_value) {
 	return;
 }
 
+template<class M, class N, class A>
+void Context<M, N, A>::setValueBefore(N _node, A _value) {
+	in_values[_node] = _value;
+	return;
+}
+
+template<class M, class N, class A>
+void Context<M, N, A>::setValueAfter(N _node, A _value) {
+	out_values[_node] = _value;
+	return;
+}
+
+template<class M, class N, class A>
+void Context<M, N, A>::addToWorklist(N _node) {
+	// TODO: Need to update this based on reverse value
+	worklist.push_back(_node);
+	return;
+}
+
 // Define the class here so that main file can use
-template class Context<int, int, int>;
+template class Context<llvm::Function*, llvm::BasicBlock*, int>;

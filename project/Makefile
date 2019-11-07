@@ -1,6 +1,10 @@
+LLVM_CONFIG=llvm-config
 OBJECTS = main.o context.o context_transition_table.o
-CXX = g++
-CFLAGS = -c -Iinclude/
+CXX = clang++
+
+CXXFLAGS = -c -Iinclude/ `$(LLVM_CONFIG) --cppflags` -fPIC -fno-rtti
+LDFLAGS = `$(LLVM_CONFIG) --ldflags` -Wl,-znodelete
+
 
 all: main virtual
 
@@ -10,7 +14,7 @@ main: $(OBJECTS)
 	$(CXX) -o main $(OBJECTS)
 
 .cpp.o:
-	$(CXX) $(CFLAGS) $< -o $@
+	$(CXX) $(CXXFLAGS) $< -o $@
 
 clean:
 	rm -f *.o main
