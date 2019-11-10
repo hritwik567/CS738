@@ -26,8 +26,8 @@ class ForwardInterProceduralAnalysis: public InterProceduralAnalysis<M, N, A> {
     virtual A topValue() = 0;
 
     virtual A normalFlowFunction(Context<M, N, A> context, N node, A in_value) = 0;
-    virtual A callEntryFlowFunction(Context<M,N,A> context, M target_method, N node, A in_value) = 0;
-    virtual A callExitFlowFunction(Context<M,N,A> context, M target_method, N node, A exit_value) = 0;
-    virtual A callLocalFlowFunction(Context<M,N,A> context, N node, A in_value) = 0;
+    virtual A callEntryFlowFunction(Context<M, N, A> context, M target_method, N node, A in_value) = 0;
+    virtual A callExitFlowFunction(Context<M, N, A> context, M target_method, N node, A exit_value) = 0;
+    virtual A callLocalFlowFunction(Context<M, N, A> context, N node, A in_value) = 0;
 };
 #endif

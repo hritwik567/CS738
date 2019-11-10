@@ -4,13 +4,15 @@ CXX=clang++
 CXXFLAGS=`$(LLVM_CONFIG) --cppflags` -fPIC -fno-rtti
 LDFLAGS=`$(LLVM_CONFIG) --ldflags` -Wl,-znodelete
 
+OBJECTS = pass.o dataflow.o
+
 all: pass.so
 
-pass.so: pass.o
-	$(CXX) -shared pass.o -o pass.so $(LDFLAGS)
+pass.so: $(OBJECTS)
+	$(CXX) -shared $(OBJECTS) -o pass.so $(LDFLAGS)
 
-pass.o: pass.cpp
-	$(CXX) -c pass.cpp -o pass.o $(CXXFLAGS)
+.cpp.o:
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 clean:
 	rm -f *.o *.so
