@@ -6,31 +6,32 @@ std::unordered_set<CallSite<M, N, A>> InterProceduralAnalysis<M, N, A>::getCalle
 }
 
 template<class M, class N, class A>
-Context<M, N, A> InterProceduralAnalysis<M, N, A>::getContext(M method, A value) {
+std::reference_wrapper<Context<M, N, A>> InterProceduralAnalysis<M, N, A>::getContext(M method, A value) {
   if (contexts.find(method) == contexts.end()) {
-    return *(new Context<M, N, A>());
+    return std::ref(*(new Context<M, N, A>()));
   }
   if (reverse) {
     for(auto e: contexts[method]) {
-      if (value == e.getExitValue()) {
+      if (value == e.get().getExitValue()) {
         return e;
       }
     }
   } else {
     for(auto e: contexts[method]) {
-      if (value == e.getEntryValue()) {
+      if (value == e.get().getEntryValue()) {
         return e;
       }
     }
   }
-  return *(new Context<M, N, A>());
+  return std::ref(*(new Context<M, N, A>()));
 }
 
 template<class M, class N, class A>
-std::vector<Context<M, N, A>> InterProceduralAnalysis<M, N, A>::getContexts(M method) {
+std::vector<std::reference_wrapper<Context<M, N, A>>> InterProceduralAnalysis<M, N, A>::getContexts(M method) {
   if(contexts.find(method) == contexts.end()) {
-    return std::vector<Context<M, N, A>>();
+    return std::vector<std::reference_wrapper<Context<M, N, A>>>();
   }
+  return contexts[method];
 }
 
 template<class M, class N, class A>

@@ -24,10 +24,13 @@ class ForwardInterProceduralAnalysis: public InterProceduralAnalysis<M, N, A> {
     virtual A copy(A src) = 0;
     virtual A meet(A op1, A op2) = 0;
     virtual A topValue() = 0;
+    virtual M getEntryMethod() = 0;
+    virtual bool isEqual(A op1, A op2) = 0;
 
-    virtual A normalFlowFunction(Context<M, N, A> context, N node, A in_value) = 0;
-    virtual A callEntryFlowFunction(Context<M, N, A> context, M target_method, N node, A in_value) = 0;
-    virtual A callExitFlowFunction(Context<M, N, A> context, M target_method, N node, A exit_value) = 0;
-    virtual A callLocalFlowFunction(Context<M, N, A> context, N node, A in_value) = 0;
+
+    virtual A normalFlowFunction(std::reference_wrapper<Context<M, N, A>> context, N node, A in_value) = 0;
+    virtual A callEntryFlowFunction(std::reference_wrapper<Context<M, N, A>> context, M target_method, N node, A in_value) = 0;
+    virtual A callExitFlowFunction(std::reference_wrapper<Context<M, N, A>> context, M target_method, N node, A exit_value) = 0;
+    virtual A callLocalFlowFunction(std::reference_wrapper<Context<M, N, A>> context, N node, A in_value) = 0;
 };
 #endif

@@ -49,7 +49,6 @@ class Context {
     std::vector<N> worklist;
     A entry_value;
     A exit_value;
-    N node;
     bool analysed;
     bool reverse;
 
@@ -61,12 +60,15 @@ class Context {
 
     int getId(void) const;
     M getMethod(void);
-    N getControlFlowGraph(void);
+    std::vector<N> getControlFlowGraph(void);
+    std::vector<N> getPredsOf(N _node);
+    std::vector<N> getSuccsOf(N _node);
     N getEntryNode(void);
     A getEntryValue(void);
     A getExitValue(void);
-    A getValueBefore(N node);
-    A getValueAfter(N node);
+    A getValueBefore(N _node);
+    A getValueAfter(N _node);
+
     bool isAnalysed(void);
     void markAnalysed(void);
     void unmarkAnalysed(void);
@@ -74,7 +76,11 @@ class Context {
     void setExitValue(A _exit_value);
     void setValueBefore(N _node, A _value);
     void setValueAfter(N _node, A _value);
+    bool isCall(N _node);
     void addToWorklist(N _node);
+    bool isEmptyWorklist();
+    N getAndPopWorklist();
+
 };
 
 namespace std {

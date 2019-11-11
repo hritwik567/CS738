@@ -1,4 +1,5 @@
 #include "context.h"
+#include "sign.h"
 
 template<class M, class N, class A>
 Context<M, N, A>::Context(): analysed(false), is_null(true) {
@@ -26,14 +27,36 @@ M Context<M, N, A>::getMethod(void) {
 }
 
 template<class M, class N, class A>
-N Context<M, N, A>::getControlFlowGraph(void) {
-	// TODO: Need to update this to return an iterator or a vector
-	return node;
+std::vector<N> Context<M, N, A>::getControlFlowGraph(void) {
+	std::vector<N> wl;
+	for(N BB : depth_first(&method->getEntryBlock())) {
+  	wl.push_back(BB);
+  }
+	return wl;
+}
+
+template<class M, class N, class A>
+std::vector<N> Context<M, N, A>::getPredsOf(N _node) {
+	std::vector<N> wl;
+	for(N Pred: predecessors(_node)) {
+		wl.push_back(Pred);
+	}
+
+	return wl;
+}
+
+template<class M, class N, class A>
+std::vector<N> Context<M, N, A>::getSuccsOf(N _node) {
+	std::vector<N> wl;
+	for(N Succ: successors(_node)) {
+		wl.push_back(Succ);
+	}
+
+	return wl;
 }
 
 template<class M, class N, class A>
 N Context<M, N, A>::getEntryNode(void) {
-	// TODO: Need to update this to return the entry node based on the method
 	return &method->getEntryBlock();
 }
 
@@ -48,13 +71,13 @@ A Context<M, N, A>::getExitValue(void) {
 }
 
 template<class M, class N, class A>
-A Context<M, N, A>::getValueBefore(N node) {
-	return in_values[node];
+A Context<M, N, A>::getValueBefore(N _node) {
+	return in_values[_node];
 }
 
 template<class M, class N, class A>
-A Context<M, N, A>::getValueAfter(N node) {
-	return out_values[node];
+A Context<M, N, A>::getValueAfter(N _node) {
+	return out_values[_node];
 }
 
 template<class M, class N, class A>
@@ -98,12 +121,28 @@ void Context<M, N, A>::setValueAfter(N _node, A _value) {
 	return;
 }
 
+// TODO: Need to update this based on reverse value
+// ERROR: If there is any error look here
 template<class M, class N, class A>
 void Context<M, N, A>::addToWorklist(N _node) {
-	// TODO: Need to update this based on reverse value
 	worklist.push_back(_node);
 	return;
 }
 
+template<class M, class N, class A>
+bool Context<M, N, A>::isEmptyWorklist() {
+	return worklist.empty();
+}
+
+template<class M, class N, class A>
+N Context<M, N, A>::getAndPopWorklist() {
+	N _node = worklist.back();
+	worklist.pop_back();
+	return _node;
+}
+// Till Here can use pq for worklist as well
+template<class M, class N, class A>
+int Context<M, N, A>::count = 0;
+
 // Define the class here so that main file can use
-template class Context<llvm::Function*, llvm::BasicBlock*, int>;
+template class Context<llvm::Function*, llvm::BasicBlock*, Sign>;

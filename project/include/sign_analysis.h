@@ -11,6 +11,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/ValueMap.h"
 #include "llvm/ADT/DenseMap.h"
+#include "llvm/ADT/StringRef.h"
 #include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallPtrSet.h"
@@ -70,7 +71,6 @@
 #endif
 
 namespace llvm {
-  typedef DenseMap<std::string, SIGN> Sign;
   typedef std::vector<BasicBlock*> BasicBlockList;
 
   /*	For storing the output of a transfer function.
@@ -103,14 +103,15 @@ namespace llvm {
   /* Basic Class for Data flow analysis. Specific analyses must extend this */
   class SignAnalysis: public ForwardInterProceduralAnalysis<Function*, BasicBlock*, Sign> {
     public:
-
-      SignAnalysis() {}
+      Module* module;
+      SignAnalysis(Module* module): module(module) {}
 
       Sign boundaryValue(Function* entryPoint);
       Sign copy(Sign src);
       Sign meet(Sign op1, Sign op2);
       Sign topValue();
       SIGN signOf(Value* value, Sign dfv);
+      Function* getEntryMethod();
 
       Sign normalFlowFunction(Context<Function*, BasicBlock*, Sign> context, BasicBlock* node, Sign in_value);
       Sign callEntryFlowFunction(Context<Function*, BasicBlock*, Sign> context, Function* target_method, BasicBlock* node, Sign in_value);
