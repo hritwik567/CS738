@@ -12,13 +12,13 @@ std::reference_wrapper<Context<M, N, A>> InterProceduralAnalysis<M, N, A>::getCo
   }
   if (reverse) {
     for(auto e: contexts[method]) {
-      if (value == e.get().getExitValue()) {
+      if(isEqual(value, e.get().getExitValue())) {
         return e;
       }
     }
   } else {
     for(auto e: contexts[method]) {
-      if (value == e.get().getEntryValue()) {
+      if(isEqual(value, e.get().getEntryValue())) {
         return e;
       }
     }
@@ -54,4 +54,4 @@ std::unordered_map<M, Context<M, N, A>> InterProceduralAnalysis<M, N, A>::getTar
 }
 
 // Define the class here so that main file can use
-template class InterProceduralAnalysis<int, int, int>;
+template class Context<llvm::Function*, llvm::BasicBlock*, Sign>;

@@ -1,9 +1,11 @@
 #ifndef _SIGN_H_
 #define _SIGN_H_
 
-#include<string>
+#include <string>
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/StringRef.h"
+
+#define RETURN "return"
 
 enum SIGN {
   TOP,

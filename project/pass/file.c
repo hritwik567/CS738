@@ -21,5 +21,7 @@ int main(){
 	int p = 5;
 	int q = f(p, -3);
 	int r = g(-q);
+  int k = -p;
+  int l = 10 + p;
 	return 0;
 }

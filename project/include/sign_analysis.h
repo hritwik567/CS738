@@ -111,12 +111,14 @@ namespace llvm {
       Sign meet(Sign op1, Sign op2);
       Sign topValue();
       SIGN signOf(Value* value, Sign dfv);
-      Function* getEntryMethod();
+      Function* getEntryMethod(void);
+      bool isEqual(Sign op1, Sign op2);
+      std::vector<Function*> getMethods(Function* _method, BasicBlock* _node);
 
-      Sign normalFlowFunction(Context<Function*, BasicBlock*, Sign> context, BasicBlock* node, Sign in_value);
-      Sign callEntryFlowFunction(Context<Function*, BasicBlock*, Sign> context, Function* target_method, BasicBlock* node, Sign in_value);
-      Sign callExitFlowFunction(Context<Function*, BasicBlock*, Sign> context, Function* target_method, BasicBlock* node, Sign exit_value);
-      Sign callLocalFlowFunction(Context<Function*, BasicBlock*, Sign> context, BasicBlock* node, Sign in_value);
+      Sign normalFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value);
+      Sign callEntryFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, Function* target_method, BasicBlock* node, Sign in_value);
+      Sign callExitFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, Function* target_method, BasicBlock* node, Sign exit_value);
+      Sign callLocalFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value);
   };
 
 }

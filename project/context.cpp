@@ -1,5 +1,4 @@
 #include "context.h"
-#include "sign.h"
 
 template<class M, class N, class A>
 Context<M, N, A>::Context(): analysed(false), is_null(true) {
@@ -29,7 +28,7 @@ M Context<M, N, A>::getMethod(void) {
 template<class M, class N, class A>
 std::vector<N> Context<M, N, A>::getControlFlowGraph(void) {
 	std::vector<N> wl;
-	for(N BB : depth_first(&method->getEntryBlock())) {
+	for(N BB: depth_first(&method->getEntryBlock())) {
   	wl.push_back(BB);
   }
 	return wl;
@@ -53,6 +52,30 @@ std::vector<N> Context<M, N, A>::getSuccsOf(N _node) {
 	}
 
 	return wl;
+}
+
+template<class M, class N, class A>
+std::vector<N> Context<M, N, A>::getTails(void) {
+	std::vector<N> wl;
+	for(N BB: depth_first(&method->getEntryBlock())) {
+		for(auto &I: *BB) {
+			if(llvm::isa<llvm::ReturnInst>(I)) {
+				wl.push_back(BB);
+				break;
+			}
+		}
+	}
+	return wl;
+}
+
+template<class M, class N, class A>
+bool Context<M, N, A>::isCall(N _node) {
+	for(auto &I: *_node) {
+		if(llvm::isa<llvm::CallInst>(I)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 template<class M, class N, class A>

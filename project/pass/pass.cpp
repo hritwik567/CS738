@@ -25,13 +25,72 @@ namespace {
           errs() << "Found global named: " << F.getName() << "\tType: " << *F.getType() << "\n";
           for(auto &BB: F) {
             errs() << "\t" << "In BB:" << BB.getName() << "\n";
+            Value *LHS, *op, *op1, *op2;
             for(auto &I: BB) {
               Instruction* Insn = &I;
-              errs() << "\t\t" << *Insn << "\n" << "\t\t ";
-              for(auto &op: Insn->operands()) {
-                errs() << op->getName() << " ";
+              errs() << "\t---------" << *Insn << " ------------\n" << "\t\t ";
+              if (isa<CallInst>(*Insn)) {
+                LHS = dyn_cast<Value>(Insn);
+                CallInst* call = dyn_cast<CallInst>(Insn);
+                errs() << "Call " << LHS->getName() << " --  " << call->getCalledFunction()->getName() << " ";
+                unsigned ii = call->getNumArgOperands();
+                for(unsigned i=0;i<ii;i++) {
+                  op = call->getArgOperand(i);
+                  if(ConstantInt *CI = dyn_cast<ConstantInt>(op)){
+                    errs() << " -- " << CI->isNegative();
+                  } else {
+                    errs() << " -- " << op->getName();
+                  }
+                }
+                errs() << "\n";
+              } else if(isa<StoreInst>(*Insn)) {
+                LHS = Insn->getOperand(1);
+                op = Insn->getOperand(0);
+                errs() << "Store " << LHS->getName();
+                if(ConstantInt *CI = dyn_cast<ConstantInt>(op)){
+                  errs() << " -- " << CI->isNegative() << "\n";
+                } else {
+                  errs() << " -- " << op->getName() << "\n";
+                }
+              } else if(isa<LoadInst>(*Insn)){
+                LHS = dyn_cast<Value>(Insn);
+                op = Insn->getOperand(0);
+                errs() << "Load " << LHS->getName();
+                if(ConstantInt *CI = dyn_cast<ConstantInt>(op)){
+                  errs() << " -- " << CI->isNegative() << "\n";
+                } else {
+                  errs() << " -- " << op->getName() << "\n";
+                }
+
+              } else if(isa<BinaryOperator>(*Insn)) {
+                LHS = dyn_cast<Value>(Insn);
+                op1 = Insn->getOperand(0);
+                op2 = Insn->getOperand(1);
+                errs() << "Binary " << Insn->getOpcodeName() << " " << LHS->getName();
+                if(ConstantInt *CI = dyn_cast<ConstantInt>(op1)){
+                  errs() << " -- " << CI->isNegative() << " ";
+                } else {
+                  errs() << " -- " << op1->getName() << " ";
+                }
+
+                if(ConstantInt *CI = dyn_cast<ConstantInt>(op2)){
+                  errs() << "-- " << CI->isNegative() << "\n";
+                } else {
+                  errs() << "-- " << op2->getName() << "\n";
+                }
+
+              } else if(isa<ReturnInst>(*Insn)){
+                LHS = Insn->getOperand(0);
+                errs() << "Return ";
+                if(ConstantInt *CI = dyn_cast<ConstantInt>(LHS)){
+                  errs() << " -- " << CI->isNegative() << " " << CI->isZero() << "\n";
+                } else {
+                  errs() << " -- " << LHS->getName() << "\n";
+                }
+              } else {
+                LHS = dyn_cast<Value>(Insn);
+                errs() << "Others " << LHS->getName() << "\n";
               }
-              errs() << "\n";
             }
           }
         }

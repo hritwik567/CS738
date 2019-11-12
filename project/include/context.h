@@ -1,5 +1,6 @@
 #ifndef _CONTEXT_H_
 #define _CONTEXT_H_
+
 #include <vector>
 #include <functional>
 #include <iterator>
@@ -7,6 +8,7 @@
 #include <unordered_set>
 #include <memory>
 #include <iostream>
+
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/STLExtras.h"
@@ -38,6 +40,8 @@
 #include "llvm/Transforms/IPO/PassManagerBuilder.h"
 #include "llvm/Transforms/Utils/Local.h"
 
+#include "sign.h"
+
 template<class M, class N, class A>
 class Context {
   private:
@@ -63,6 +67,7 @@ class Context {
     std::vector<N> getControlFlowGraph(void);
     std::vector<N> getPredsOf(N _node);
     std::vector<N> getSuccsOf(N _node);
+    std::vector<N> getTails(void);
     N getEntryNode(void);
     A getEntryValue(void);
     A getExitValue(void);

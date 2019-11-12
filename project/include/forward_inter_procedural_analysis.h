@@ -2,6 +2,7 @@
 #define _FORWARD_INTER_PROCEDURAL_ANALYSIS_H_
 
 #include "inter_procedural_analysis.h"
+#include <cassert>
 
 /*
 <M> the type of a method
@@ -12,6 +13,9 @@
 template<class M, class N, class A>
 class ForwardInterProceduralAnalysis: public InterProceduralAnalysis<M, N, A> {
   protected:
+    using InterProceduralAnalysis<M, N, A>::workList;
+    using InterProceduralAnalysis<M, N, A>::contexts;
+    using InterProceduralAnalysis<M, N, A>::context_transitions;
     Context<M, N, A> initContextForPhantomMethod(M method, A entry_value);
     Context<M, N, A> initContext(M method, A entry_value);
 
@@ -26,11 +30,12 @@ class ForwardInterProceduralAnalysis: public InterProceduralAnalysis<M, N, A> {
     virtual A topValue() = 0;
     virtual M getEntryMethod() = 0;
     virtual bool isEqual(A op1, A op2) = 0;
+    virtual std::vector<M> getMethods(M _method, N _node); // Returns The Function* that N calls to
 
 
     virtual A normalFlowFunction(std::reference_wrapper<Context<M, N, A>> context, N node, A in_value) = 0;
     virtual A callEntryFlowFunction(std::reference_wrapper<Context<M, N, A>> context, M target_method, N node, A in_value) = 0;
     virtual A callExitFlowFunction(std::reference_wrapper<Context<M, N, A>> context, M target_method, N node, A exit_value) = 0;
-    virtual A callLocalFlowFunction(std::reference_wrapper<Context<M, N, A>> context, N node, A in_value) = 0;
+    virtual A callCustomFlowFunction(std::reference_wrapper<Context<M, N, A>> context, N node, A in_value) = 0;
 };
 #endif
