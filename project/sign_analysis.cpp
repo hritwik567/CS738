@@ -167,7 +167,7 @@ namespace llvm {
     for(auto &x : out_value) {
       DBG(errs() << x.first << " " << SIGN_toString(x.second);)
     }
-    
+
     return out_value;
   }
 
@@ -190,6 +190,7 @@ namespace llvm {
         }
 
         context_transitions.addTransition(std::make_pair(context.get(), node), target_context.get());
+        // context_transitions.addTransition(call_site, target_context.get());
 
         if(target_context.get().isAnalysed()) {
           Sign exit_value = target_context.get().getExitValue();

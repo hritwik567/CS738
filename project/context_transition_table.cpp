@@ -86,4 +86,4 @@ std::unordered_set<Context<M, N, A>> ContextTransitionTable<M, N, A>::reachableS
 }
 
 // Define the class here so that main file can use
-template class Context<llvm::Function*, llvm::BasicBlock*, Sign>;
+template class ContextTransitionTable<llvm::Function*, llvm::BasicBlock*, Sign>;

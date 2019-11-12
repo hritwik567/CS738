@@ -2,7 +2,7 @@
 
 template<class M, class N, class A>
 Context<M, N, A> ForwardInterProceduralAnalysis<M, N, A>::initContextForPhantomMethod(M method, A entry_value) {
-  Context<M, N, A> *context = new Context<M, N, A>(method);
+  Context<M, N, A> *context = new Context<M, N, A>(method, false);
   context->setEntryValue(entry_value);
   context->setExitValue(copy(entry_value));
   context->markAnalysed();
@@ -86,7 +86,7 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
       std::vector<N> tails = currentContext.get().getTails();
 
       // TODO: What if there are mutiple exit nodes and we are pushing this last
-			if(tails.find(node) != tails.end()) {
+			if(std::find(tails.begin(), tails.end(), node) != tails.end()) {
         currentContext.get().addToWorklist(NULL);
 			}
 
@@ -118,4 +118,4 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
 }
 
 // Define the class here so that main file can use
-template class Context<llvm::Function*, llvm::BasicBlock*, Sign>;
+template class ForwardInterProceduralAnalysis<llvm::Function*, llvm::BasicBlock*, Sign>;

@@ -54,4 +54,4 @@ std::unordered_map<M, Context<M, N, A>> InterProceduralAnalysis<M, N, A>::getTar
 }
 
 // Define the class here so that main file can use
-template class Context<llvm::Function*, llvm::BasicBlock*, Sign>;
+template class InterProceduralAnalysis<llvm::Function*, llvm::BasicBlock*, Sign>;

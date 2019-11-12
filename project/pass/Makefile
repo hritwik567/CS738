@@ -9,7 +9,7 @@ OBJECTS = pass.o dataflow.o
 all: pass.so
 
 pass.so: $(OBJECTS)
-	$(CXX) -shared $(OBJECTS) -o pass.so $(LDFLAGS)
+	$(CXX) -dylib -shared $^ -o $@ $(LDFLAGS)
 
 .cpp.o:
 	$(CXX) -c $(CXXFLAGS) $< -o $@
