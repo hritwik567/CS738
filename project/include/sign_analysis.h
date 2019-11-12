@@ -58,11 +58,10 @@
 #include <utility>
 
 #include "forward_inter_procedural_analysis.h"
-#include "sign.h"
 
 // DEBUG mode
-#undef DEBUG
-//#define DEBUG 1
+// #undef DEBUG
+#define DEBUG 1
 
 #ifdef DEBUG
 #define DBG(a) a
@@ -71,36 +70,6 @@
 #endif
 
 namespace llvm {
-  typedef std::vector<BasicBlock*> BasicBlockList;
-
-  /*	For storing the output of a transfer function.
-      We also store a list of BitVectors corresponding to predecessors/successors used to handle phi nodes) */
-  struct TransferOutput {
-    Sign element;
-    std::map<BasicBlock*, Sign> neighborVals;
-  };
-
-  /* Stores the IN and OUT sets for a basic block. Also a variable to store the temporary output of the transfer function */
-  struct BlockResult {
-    Sign in;
-    Sign out;
-
-    TransferOutput transferOutput;
-  };
-
-  /* Result of pass on a function */
-  struct SignAnalysisResult {
-    /* Mapping from basic blocks to their results */
-    std::map<BasicBlock*, BlockResult> result;
-
-    /* Mapping from domain elements to indices in bitvectors
-       (to figure out which bits are which values) */
-    std::map<void*, int> domainToIndex;
-
-    bool modified;
-  };
-
-  /* Basic Class for Data flow analysis. Specific analyses must extend this */
   class SignAnalysis: public ForwardInterProceduralAnalysis<Function*, BasicBlock*, Sign> {
     public:
       Module* module;
@@ -113,14 +82,13 @@ namespace llvm {
       SIGN signOf(Value* value, Sign dfv);
       Function* getEntryMethod(void);
       bool isEqual(Sign op1, Sign op2);
-      std::vector<Function*> getMethods(Function* _method, BasicBlock* _node);
+      std::pair<StringRef, SIGN> signOf(Instruction* Insn, Sign dfv);
 
       Sign normalFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value);
-      Sign callEntryFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, Function* target_method, BasicBlock* node, Sign in_value);
-      Sign callExitFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, Function* target_method, BasicBlock* node, Sign exit_value);
-      Sign callLocalFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value);
+      Sign callEntryFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, Function* target_method, Instruction* Insn, Sign in_value);
+      Sign callExitFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, Function* target_method, Instruction* Insn, Sign exit_value);
+      Sign callCustomFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value);
   };
-
 }
 
 #endif

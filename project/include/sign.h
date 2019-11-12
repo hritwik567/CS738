@@ -18,7 +18,7 @@ enum SIGN {
 
 typedef llvm::DenseMap<llvm::StringRef, SIGN> Sign;
 
-SIGN meet(SIGN l, SIGN r){
+SIGN SIGN_meet(SIGN l, SIGN r){
   if(l == SIGN::BOTTOM) {
     return SIGN::BOTTOM;
   } else if(l == SIGN::TOP) {
@@ -46,7 +46,7 @@ SIGN meet(SIGN l, SIGN r){
   }
 }
 
-SIGN plus(SIGN l, SIGN r){
+SIGN SIGN_plus(SIGN l, SIGN r){
   if(l == SIGN::BOTTOM) {
     return SIGN::BOTTOM;
   } else if(l == SIGN::TOP) {
@@ -82,7 +82,7 @@ SIGN plus(SIGN l, SIGN r){
   }
 }
 
-SIGN mult(SIGN l, SIGN r){
+SIGN SIGN_mult(SIGN l, SIGN r){
   if(l == SIGN::BOTTOM) {
     return SIGN::BOTTOM;
   } else if(l == SIGN::TOP) {
@@ -118,7 +118,7 @@ SIGN mult(SIGN l, SIGN r){
   }
 }
 
-SIGN negate(SIGN s) {
+SIGN SIGN_negate(SIGN s) {
   if(s == SIGN::BOTTOM) {
     return SIGN::BOTTOM;
   } else if(s == SIGN::TOP) {
@@ -134,7 +134,7 @@ SIGN negate(SIGN s) {
   }
 }
 
-std::string toString(SIGN s) {
+std::string SIGN_toString(SIGN s) {
   if(s == SIGN::BOTTOM) {
     return "_|_";
   } else if(s == SIGN::TOP) {

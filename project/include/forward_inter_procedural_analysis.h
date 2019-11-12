@@ -34,8 +34,6 @@ class ForwardInterProceduralAnalysis: public InterProceduralAnalysis<M, N, A> {
 
 
     virtual A normalFlowFunction(std::reference_wrapper<Context<M, N, A>> context, N node, A in_value) = 0;
-    virtual A callEntryFlowFunction(std::reference_wrapper<Context<M, N, A>> context, M target_method, N node, A in_value) = 0;
-    virtual A callExitFlowFunction(std::reference_wrapper<Context<M, N, A>> context, M target_method, N node, A exit_value) = 0;
     virtual A callCustomFlowFunction(std::reference_wrapper<Context<M, N, A>> context, N node, A in_value) = 0;
 };
 #endif

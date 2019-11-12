@@ -1,14 +1,27 @@
-#include "context_transition_table.h"
+#include "sign_analysis.h"
 
-using namespace std;
+using namespace llvm;
 
-template<>
-int Context<int, int, int>::count = 0;
+namespace {
 
-int main() {
-	ContextTransitionTable<int, int, int> c;
-	Context<int, int, int> c1(0);
-	cout << "Hello World!" << c1.getId()  << endl;
-	c.sayHello();
-	return 0;
+  class CustomModulePass : public ModulePass {
+    public:
+      static char ID;
+    	CustomModulePass() : ModulePass(ID) {}
+
+    	bool runOnModule(Module &M) override {
+				SignAnalysis S(&M);
+				S.doAnalysis();
+    		return false;
+    	}
+  };
 }
+
+char CustomModulePass::ID = 0;
+
+static RegisterPass<CustomModulePass> Y("cm_pass", "Custom Module Pass", true, true);
+
+static RegisterStandardPasses Y1(
+    PassManagerBuilder::EP_EarlyAsPossible,
+    [](const PassManagerBuilder &Builder,
+       legacy::PassManagerBase &PM) { PM.add(new CustomModulePass()); });

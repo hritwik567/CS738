@@ -32,10 +32,13 @@ namespace {
               if (isa<CallInst>(*Insn)) {
                 LHS = dyn_cast<Value>(Insn);
                 CallInst* call = dyn_cast<CallInst>(Insn);
-                errs() << "Call " << LHS->getName() << " --  " << call->getCalledFunction()->getName() << " ";
+                Function* tar = call->getCalledFunction();
+                Function::arg_iterator AI = tar->arg_begin();
+                errs() << "Call " << LHS->getName() << " --  " << tar->getName() << " ";
                 unsigned ii = call->getNumArgOperands();
                 for(unsigned i=0;i<ii;i++) {
                   op = call->getArgOperand(i);
+                  errs() << "Arg -- " <<  AI[i].getName() << " --- ";
                   if(ConstantInt *CI = dyn_cast<ConstantInt>(op)){
                     errs() << " -- " << CI->isNegative();
                   } else {

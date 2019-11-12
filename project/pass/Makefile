@@ -15,4 +15,4 @@ pass.so: $(OBJECTS)
 	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 clean:
-	rm -f *.o *.so
+	rm -f *.o *.so *.ll *.bc
