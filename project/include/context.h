@@ -42,6 +42,16 @@
 
 #include "sign.h"
 
+// DEBUG mode
+// #undef DEBUG
+#define DEBUG 1
+
+#ifdef DEBUG
+#define DBG(a) a
+#else
+#define DBG(a)
+#endif
+
 template<class M, class N, class A>
 class Context {
   private:
@@ -83,8 +93,10 @@ class Context {
     void setValueAfter(N _node, A _value);
     bool isCall(N _node);
     void addToWorklist(N _node);
-    bool isEmptyWorklist();
-    N getAndPopWorklist();
+    bool isEmptyWorklist(void);
+    N getAndPopWorklist(void);
+    N getLastWorklist(void);
+    std::vector<N> getWorklist(void);
 
 };
 

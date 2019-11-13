@@ -59,16 +59,6 @@
 
 #include "forward_inter_procedural_analysis.h"
 
-// DEBUG mode
-// #undef DEBUG
-#define DEBUG 1
-
-#ifdef DEBUG
-#define DBG(a) a
-#else
-#define DBG(a)
-#endif
-
 namespace llvm {
   class SignAnalysis: public ForwardInterProceduralAnalysis<Function*, BasicBlock*, Sign> {
     public:

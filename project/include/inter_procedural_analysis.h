@@ -35,8 +35,9 @@ class InterProceduralAnalysis {
     virtual bool isEqual(A op1, A op2) = 0;
     virtual A topValue() = 0;
 
-    std::unordered_set<CallSite<M, N, A>> getCallers(Context<M,N,A> target);
+    std::vector<CallSite<M, N, A>> getCallers(Context<M, N, A> target);
     std::reference_wrapper<Context<M, N, A>> getContext(M method, A value);
+    std::reference_wrapper<Context<M, N, A>> getContextbyId(M method, int id);
     std::vector<std::reference_wrapper<Context<M, N, A>>> getContexts(M method);
     ContextTransitionTable<M, N, A> getContextTransitionTable();
     std::unordered_set<M> getMethods();

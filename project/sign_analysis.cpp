@@ -3,6 +3,7 @@
 namespace llvm {
 
   std::pair<StringRef, SIGN> SignAnalysis::signOf(Instruction* Insn, Sign dfv) {
+    // DBG(errs() << "SignOf " << *Insn << "\n";)
     Value *LHS, *op, *op1, *op2;
     if(isa<StoreInst>(*Insn)) {
       LHS = Insn->getOperand(1);
@@ -102,7 +103,7 @@ namespace llvm {
           return std::make_pair(RETURN, SIGN::POSITIVE);
         }
       } else {
-        if(dfv.find(op->getName()) != dfv.end()) {
+        if(dfv.find(LHS->getName()) != dfv.end()) {
           return std::make_pair(RETURN, dfv[LHS->getName()]);
         } else {
           assert(false);
@@ -154,25 +155,28 @@ namespace llvm {
   }
 
   Sign SignAnalysis::normalFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value) {
-    DBG(errs() << "In normalFlowFunction for function " << node->getParent()->getName() << "\n";)
+    DBG(errs() << "In normalFlowFunction for function " << node->getParent()->getName()  << ":" << node->getName() << "\n";)
     Sign out_value(in_value);
 
     for(auto &I: *node) {
       Instruction* Insn = &I;
       std::pair<StringRef, SIGN> p = signOf(Insn, out_value);
       out_value[p.first] = p.second;
+      // for(auto &x : out_value) {
+      //   DBG(errs() << x.first << " " << SIGN_toString(x.second) << "; ";)
+      // }
     }
 
-    DBG(errs() << "In normalFlowFunction for out_value: " << "\n";)
-    for(auto &x : out_value) {
-      DBG(errs() << x.first << " " << SIGN_toString(x.second);)
-    }
+    // DBG(errs() << "\nIn normalFlowFunction out_value: " << "\n";)
+    // for(auto &x : out_value) {
+    //   DBG(errs() << x.first << " " << SIGN_toString(x.second) << "\n";)
+    // }
 
     return out_value;
   }
 
   Sign SignAnalysis::callCustomFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value) {
-    DBG(errs() << "In callCustomFlowFunction for function " << node->getParent()->getName() << "\n";)
+    DBG(errs() << "In callCustomFlowFunction for function " << node->getParent()->getName() << ":" << node->getName() << "\n";)
     Sign out_value(in_value);
     for(auto &I: *node) {
       Instruction* Insn = &I;
@@ -187,29 +191,38 @@ namespace llvm {
         std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> target_context = getContext(target_method, entry_value);
         if (target_context.get().is_null) {
           target_context.get() = initContext(target_method, entry_value);
+          context.get().addToWorklist(node);
+          context_transitions.addTransition(std::make_pair(context.get(), node), target_context.get());
+          return context.get().getValueAfter(node);
         }
 
+        // DBG(errs() << "Add transitions " << context.get().getId() << ":" << node->getParent()->getName() << ":" << node->getName())
         context_transitions.addTransition(std::make_pair(context.get(), node), target_context.get());
         // context_transitions.addTransition(call_site, target_context.get());
 
-        if(target_context.get().isAnalysed()) {
+        // if(target_context.get().isAnalysed()) {
           Sign exit_value = target_context.get().getExitValue();
           Sign returned_value = callExitFlowFunction(context, target_method, Insn, exit_value);
           out_value = meet(out_value, returned_value);
-        } else {
-          Value* LHS = dyn_cast<Value>(Insn);
-          out_value[LHS->getName()] = SIGN::BOTTOM;
-        }
+        // } else {
+          // context.get().addToWorklist(node);
+          // return in_value;
+          // Value* LHS = dyn_cast<Value>(Insn);
+          // out_value[LHS->getName()] = SIGN::BOTTOM;
+        // }
       } else {
         std::pair<StringRef, SIGN> p = signOf(Insn, out_value);
         out_value[p.first] = p.second;
       }
+      // for(auto &x : out_value) {
+      //   DBG(errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "; ";)
+      // }
     }
 
-    DBG(errs() << "In callCustomFlowFunction for out_value: " << "\n";)
-    for(auto &x : out_value) {
-      DBG(errs() << x.first << " " << SIGN_toString(x.second);)
-    }
+    // DBG(errs() << "\nIn callCustomFlowFunction out_value: " << "\n";)
+    // for(auto &x : out_value) {
+    //   DBG(errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
+    // }
     return out_value;
   }
 

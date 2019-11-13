@@ -1,7 +1,7 @@
 #include "inter_procedural_analysis.h"
 
 template<class M, class N, class A>
-std::unordered_set<CallSite<M, N, A>> InterProceduralAnalysis<M, N, A>::getCallers(Context<M, N, A> target) {
+std::vector<CallSite<M, N, A>> InterProceduralAnalysis<M, N, A>::getCallers(Context<M, N, A> target) {
   return context_transitions.getCallers(target);
 }
 
@@ -24,6 +24,15 @@ std::reference_wrapper<Context<M, N, A>> InterProceduralAnalysis<M, N, A>::getCo
     }
   }
   return std::ref(*(new Context<M, N, A>()));
+}
+
+template<class M, class N, class A>
+std::reference_wrapper<Context<M, N, A>> InterProceduralAnalysis<M, N, A>::getContextbyId(M method, int id) {
+  for(auto e: contexts[method]) {
+    if(id == e.get().getId()) {
+      return e;
+    }
+  }
 }
 
 template<class M, class N, class A>

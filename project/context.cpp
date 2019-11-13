@@ -2,7 +2,7 @@
 
 template<class M, class N, class A>
 Context<M, N, A>::Context(): analysed(false), is_null(true) {
-	id = ++count;
+	// id = ++count;
 }
 
 template<class M, class N, class A>
@@ -31,6 +31,7 @@ std::vector<N> Context<M, N, A>::getControlFlowGraph(void) {
 	for(N BB: depth_first(&method->getEntryBlock())) {
   	wl.push_back(BB);
   }
+	std::reverse(wl.begin(), wl.end());
 	return wl;
 }
 
@@ -153,17 +154,30 @@ void Context<M, N, A>::addToWorklist(N _node) {
 }
 
 template<class M, class N, class A>
-bool Context<M, N, A>::isEmptyWorklist() {
+bool Context<M, N, A>::isEmptyWorklist(void) {
 	return worklist.empty();
 }
 
 template<class M, class N, class A>
-N Context<M, N, A>::getAndPopWorklist() {
+std::vector<N> Context<M, N, A>::getWorklist(void) {
+	return worklist;
+}
+
+template<class M, class N, class A>
+N Context<M, N, A>::getAndPopWorklist(void) {
 	N _node = worklist.back();
 	worklist.pop_back();
 	return _node;
 }
+
+template<class M, class N, class A>
+N Context<M, N, A>::getLastWorklist(void) {
+	if(worklist.empty()) return NULL;
+	return worklist.back();
+}
+
 // Till Here can use pq for worklist as well
+
 template<class M, class N, class A>
 int Context<M, N, A>::count = 0;
 

@@ -16,6 +16,8 @@ class ForwardInterProceduralAnalysis: public InterProceduralAnalysis<M, N, A> {
     using InterProceduralAnalysis<M, N, A>::workList;
     using InterProceduralAnalysis<M, N, A>::contexts;
     using InterProceduralAnalysis<M, N, A>::context_transitions;
+    using InterProceduralAnalysis<M, N, A>::getContextbyId;
+
     Context<M, N, A> initContextForPhantomMethod(M method, A entry_value);
     Context<M, N, A> initContext(M method, A entry_value);
 
