@@ -49,7 +49,7 @@ namespace {
               } else if(isa<StoreInst>(*Insn)) {
                 LHS = Insn->getOperand(1);
                 op = Insn->getOperand(0);
-                errs() << "Store " << LHS->getName();
+                errs() << "Store " << std::stoi("0" + LHS->getName().substr(3).lower());
                 if(ConstantInt *CI = dyn_cast<ConstantInt>(op)){
                   errs() << " -- " << CI->isNegative() << "\n";
                 } else {

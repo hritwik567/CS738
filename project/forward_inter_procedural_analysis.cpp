@@ -104,8 +104,8 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
           DBG(llvm::errs() << "Tails:" << e->getParent()->getName() << ":" << e->getName() << "\n";)
       }
       if(current_context.get().getLastWorklist() != NULL){
-      DBG(llvm::errs() << "getLastWorklist " << current_context.get().getLastWorklist()->getName() << "\n";)
-      }else {
+        DBG(llvm::errs() << "getLastWorklist " << current_context.get().getLastWorklist()->getName() << "\n";)
+      } else {
         DBG(llvm::errs() << "getLastWorklist NULL" << "\n";)
       }
       DBG(llvm::errs() << "Node " << node->getName() << "\n";)

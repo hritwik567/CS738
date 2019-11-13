@@ -17,7 +17,7 @@ int f(int a, int b) {
   return c;
 }
 
-int main(){
+int main() {
 	int p = 5;
 	int q = f(p, -3);
 	int r = g(-q);

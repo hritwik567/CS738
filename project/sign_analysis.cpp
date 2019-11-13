@@ -143,6 +143,7 @@ namespace llvm {
   }
 
   Function* SignAnalysis::getEntryMethod(void) {
+    // DBG(errs() << "here" << "\n" << module->getFunction("main")->getName;)
     return module->getFunction("main");
   }
 
@@ -219,10 +220,10 @@ namespace llvm {
       // }
     }
 
-    // DBG(errs() << "\nIn callCustomFlowFunction out_value: " << "\n";)
-    // for(auto &x : out_value) {
-    //   DBG(errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
-    // }
+    DBG(errs() << "\nIn callCustomFlowFunction out_value: " << "\n";)
+    for(auto &x : out_value) {
+      DBG(errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
+    }
     return out_value;
   }
 
