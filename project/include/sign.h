@@ -6,6 +6,7 @@
 #include "llvm/ADT/StringRef.h"
 
 #define RETURN "return"
+#define BRANCH "branch"
 
 enum SIGN {
   TOP,

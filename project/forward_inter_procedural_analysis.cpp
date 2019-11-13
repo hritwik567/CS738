@@ -87,7 +87,17 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
         out = normalFlowFunction(current_context, node, in);
       }
 
+      // DBG(llvm::errs() << "out value before meet:" << "\n";)
+      // for(auto &x : out) {
+      //   DBG(llvm::errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
+      // }
+
 			out = meet(out, prevOut);
+
+      DBG(llvm::errs() << "setting afterValue value:" << "\n";)
+      for(auto &x : out) {
+        DBG(llvm::errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
+      }
 
 			current_context.get().setValueAfter(node, out);
 
@@ -127,14 +137,18 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
 
 			assert(current_context.get().isEmptyWorklist());
 
-			A exitValue = topValue();
+			A exit_value = topValue();
       std::vector<N> tails = current_context.get().getTails();
 			for(int i=0; i<tails.size(); i++) {
-				A tailOut = current_context.get().getValueAfter(tails[i]);
-				exitValue = meet(exitValue, tailOut);
+        DBG(llvm::errs() << "setting exit value:" << tails[i]->getName() << "\n";)
+				A tail_out = current_context.get().getValueAfter(tails[i]);
+        for(auto &x : tail_out) {
+          DBG(llvm::errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
+        }
+				exit_value = meet(exit_value, tail_out);
 			}
 
-			current_context.get().setExitValue(exitValue);
+			current_context.get().setExitValue(exit_value);
 
 			current_context.get().markAnalysed();
 			std::vector<CallSite<M, N, A>> callers =  context_transitions.getCallers(current_context.get());
@@ -143,7 +157,7 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
 					std::reference_wrapper<Context<M, N, A>> calling_context = getContextbyId(call_site.second->getParent(), call_site.first.getId());
 					N call_node = call_site.second;
           DBG(llvm::errs() << "call_site: call node " << call_site.first.getId() << ":"  << call_node->getParent()->getName() << ":" << call_node->getName() << "\n";)
-          calling_context.get().addToWorklist(call_node);
+          // calling_context.get().addToWorklist(call_node);
 					workList.push_back(calling_context);
 				}
 			}

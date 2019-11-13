@@ -109,6 +109,8 @@ namespace llvm {
           assert(false);
         }
       }
+    } else if(isa<BranchInst>(*Insn)) {
+      return std::make_pair(BRANCH, SIGN::BOTTOM);
     } else {
       LHS = dyn_cast<Value>(Insn);
       return std::make_pair(LHS->getName(), SIGN::BOTTOM);
@@ -129,10 +131,10 @@ namespace llvm {
     for(auto &x : op2) {
       if (op1.find(x.first) != op1.end()) {
         SIGN sign1 = x.second;
-        SIGN sign2 = op2[x.first];
+        SIGN sign2 = op1[x.first];
         result[x.first] = SIGN_meet(sign1, sign2);
       } else {
-        result[x.first] = op2[x.first];
+        result[x.first] = x.second;
       }
     }
     return result;
@@ -162,16 +164,17 @@ namespace llvm {
     for(auto &I: *node) {
       Instruction* Insn = &I;
       std::pair<StringRef, SIGN> p = signOf(Insn, out_value);
-      out_value[p.first] = p.second;
+      if(p.first != BRANCH)
+        out_value[p.first] = p.second;
       // for(auto &x : out_value) {
       //   DBG(errs() << x.first << " " << SIGN_toString(x.second) << "; ";)
       // }
     }
 
-    // DBG(errs() << "\nIn normalFlowFunction out_value: " << "\n";)
-    // for(auto &x : out_value) {
-    //   DBG(errs() << x.first << " " << SIGN_toString(x.second) << "\n";)
-    // }
+    DBG(errs() << "\nIn normalFlowFunction out_value: " << "\n";)
+    for(auto &x : out_value) {
+      DBG(errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
+    }
 
     return out_value;
   }
@@ -213,7 +216,8 @@ namespace llvm {
         // }
       } else {
         std::pair<StringRef, SIGN> p = signOf(Insn, out_value);
-        out_value[p.first] = p.second;
+        if(p.first != BRANCH)
+          out_value[p.first] = p.second;
       }
       // for(auto &x : out_value) {
       //   DBG(errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "; ";)
@@ -258,6 +262,7 @@ namespace llvm {
     Sign return_value;
     Value* LHS = dyn_cast<Value>(Insn);
     return_value[LHS->getName()] = exit_value[RETURN];
+    DBG(errs() << "callExitFlowFunction " << SIGN_toString(exit_value[RETURN]) << "\n";)
     return return_value;
   }
 
