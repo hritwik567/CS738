@@ -4,24 +4,25 @@ using namespace llvm;
 
 namespace {
 
-  class CustomModulePass : public ModulePass {
+  class SignAnalysisModulePass : public ModulePass {
     public:
       static char ID;
-    	CustomModulePass() : ModulePass(ID) {}
+    	SignAnalysisModulePass() : ModulePass(ID) {}
 
     	bool runOnModule(Module &M) override {
 				SignAnalysis S(&M);
 				S.doAnalysis();
+        S.printOutput();
     		return false;
     	}
   };
 }
 
-char CustomModulePass::ID = 0;
+char SignAnalysisModulePass::ID = 0;
 
-static RegisterPass<CustomModulePass> Y("cm_pass", "Custom Module Pass", true, true);
+static RegisterPass<SignAnalysisModulePass> Y("sign_analysis", "Sign Analysis Module Pass", true, true);
 
 static RegisterStandardPasses Y1(
     PassManagerBuilder::EP_EarlyAsPossible,
     [](const PassManagerBuilder &Builder,
-       legacy::PassManagerBase &PM) { PM.add(new CustomModulePass()); });
+       legacy::PassManagerBase &PM) { PM.add(new SignAnalysisModulePass()); });

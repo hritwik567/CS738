@@ -266,4 +266,53 @@ namespace llvm {
     return return_value;
   }
 
+  bool sort_func(StringRef a, StringRef b) {
+    return std::stoi("0" + a.substr(3).lower()) < std::stoi("0" + b.substr(3).lower());
+  }
+
+  void SignAnalysis::printOutput(void) {
+    for(auto &e: contexts) {
+      errs() << "Function Name: " << e.first->getName() << "\n";
+      for(int i=0; i<e.second.size(); i++) {
+        Sign entry_value = e.second[i].get().getEntryValue();
+        Sign exit_value = e.second[i].get().getExitValue();
+
+        std::vector<StringRef> entry_keys;
+        std::vector<StringRef> exit_keys;
+
+        for(auto &x: entry_value) {
+          entry_keys.push_back(x.first);
+        }
+
+        std::sort(entry_keys.begin(), entry_keys.end(), sort_func);
+
+        for(auto &x: exit_value) {
+          if(entry_value.find(x.first) == entry_value.end() and x.first != RETURN)
+            exit_keys.push_back(x.first);
+        }
+
+        std::sort(exit_keys.begin(), exit_keys.end(), sort_func);
+
+        errs() << " Context: " << e.second[i].get().getId() << "\n";
+        errs() << "  Entry Value:\n";
+
+        for(auto &x: entry_keys) {
+          errs() << "   " << x << " " << SIGN_toString(entry_value[x]) << "\n";
+        }
+
+        errs() << "  Intermediate Values:\n";
+        for(auto &x: exit_keys) {
+          errs() << "   " << x << " " << SIGN_toString(exit_value[x]) << "\n";
+        }
+
+        errs() << "  Return Value:\n";
+        if(exit_value.find(RETURN) != exit_value.end()) {
+          errs() << "   " << RETURN << " " << SIGN_toString(exit_value[RETURN]) << "\n";
+        }
+        errs() << "\n";
+      }
+      errs() << "------------xxxxxxxxxxxx------------\n\n";
+    }
+  }
+
 }

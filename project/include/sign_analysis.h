@@ -78,6 +78,7 @@ namespace llvm {
       Sign callEntryFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, Function* target_method, Instruction* Insn, Sign in_value);
       Sign callExitFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, Function* target_method, Instruction* Insn, Sign exit_value);
       Sign callCustomFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value);
+      void printOutput(void);
   };
 }
 

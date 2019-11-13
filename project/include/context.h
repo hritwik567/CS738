@@ -43,8 +43,8 @@
 #include "sign.h"
 
 // DEBUG mode
-// #undef DEBUG
-#define DEBUG 1
+#undef DEBUG
+// #define DEBUG 1
 
 #ifdef DEBUG
 #define DBG(a) a

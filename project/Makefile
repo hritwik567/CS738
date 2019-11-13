@@ -14,4 +14,4 @@ main.so: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 clean:
-	rm -f *.o *.so
+	rm -f *.o *.so tests/*.bc
