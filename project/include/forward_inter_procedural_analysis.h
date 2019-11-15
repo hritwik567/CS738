@@ -32,6 +32,7 @@ class ForwardInterProceduralAnalysis: public InterProceduralAnalysis<M, N, A> {
     virtual A topValue() = 0;
     virtual M getEntryMethod() = 0;
     virtual bool isEqual(A op1, A op2) = 0;
+    virtual bool isReturnEqual(A op1, A op2) = 0;
 
 
     virtual A normalFlowFunction(std::reference_wrapper<Context<M, N, A>> context, N node, A in_value) = 0;

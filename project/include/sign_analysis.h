@@ -72,6 +72,7 @@ namespace llvm {
       SIGN signOf(Value* value, Sign dfv);
       Function* getEntryMethod(void);
       bool isEqual(Sign op1, Sign op2);
+      bool isReturnEqual(Sign op1, Sign op2);
       std::pair<StringRef, SIGN> signOf(Instruction* Insn, Sign dfv);
 
       Sign normalFlowFunction(std::reference_wrapper<Context<Function*, BasicBlock*, Sign>> context, BasicBlock* node, Sign in_value);

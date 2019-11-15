@@ -33,6 +33,7 @@ class InterProceduralAnalysis {
     virtual void doAnalysis(void) = 0;
     virtual A meet(A op1, A op2) = 0;
     virtual bool isEqual(A op1, A op2) = 0;
+    virtual bool isReturnEqual(A op1, A op2) = 0;
     virtual A topValue() = 0;
 
     std::vector<CallSite<M, N, A>> getCallers(Context<M, N, A> target);

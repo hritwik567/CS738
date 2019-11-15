@@ -43,6 +43,12 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
     // TODO: Will probably need to make this a pointer
 		std::reference_wrapper<Context<M, N, A>> current_context = workList.back();
 
+    // if(current_context.get().getLastWorklist() != NULL){
+    //   llvm::errs() << "doAnalysis Node being processed: " << current_context.get().getId() << " "  << current_context.get().getLastWorklist()->getParent()->getName() << ":" << current_context.get().getLastWorklist()->getName() << "\n";
+    // } else {
+    //   llvm::errs() << "doAnalysis Node being processed: " << current_context.get().getId() << " " << current_context.get().getMethod()->getName() << ":NULL" << "\n";
+    // }
+
 		if(current_context.get().isEmptyWorklist()) {
       current_context.get().markAnalysed();
       workList.pop_back();
@@ -52,9 +58,9 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
 		N node = current_context.get().getAndPopWorklist();
 
     if(node != NULL){
-      DBG(llvm::errs() << "-------------In doAnalysis Node being processed: " << current_context.get().getId() << " "  << node->getParent()->getName() << ":" << node->getName() << "\n";)
+      llvm::errs() << "---------------------doAnalysis Node being processed: " << current_context.get().getId() << " "  << node->getParent()->getName() << ":" << node->getName() << "\n";
     } else {
-      DBG(llvm::errs() << "-------------In doAnalysis Node being processed: " << current_context.get().getId() << " " << current_context.get().getMethod()->getName() << ":NULL" << "\n";)
+      llvm::errs() << "---------------------doAnalysis Node being processed: " << current_context.get().getId() << " " << current_context.get().getMethod()->getName() << ":NULL" << "\n";
     }
     for(N &e: current_context.get().getWorklist()) {
       if(e == NULL) {
@@ -148,16 +154,28 @@ void ForwardInterProceduralAnalysis<M, N, A>::doAnalysis(void) {
 				exit_value = meet(exit_value, tail_out);
 			}
 
+      A prev_exit_value = current_context.get().getExitValue();
+
+      DBG(llvm::errs() << "get exit value:" << "\n";)
+      for(auto &x : current_context.get().getExitValue()) {
+        DBG(llvm::errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
+      }
+      DBG(llvm::errs() << "set exit value:"<< "\n";)
+      for(auto &x : exit_value) {
+        DBG(llvm::errs() << "\t " << x.first << " " << SIGN_toString(x.second) << "\n";)
+      }
+
 			current_context.get().setExitValue(exit_value);
 
 			current_context.get().markAnalysed();
 			std::vector<CallSite<M, N, A>> callers =  context_transitions.getCallers(current_context.get());
-			if(!callers.empty()) {
+			if(!callers.empty() and !isReturnEqual(prev_exit_value, exit_value)) {
         for(auto &call_site: callers) {
 					std::reference_wrapper<Context<M, N, A>> calling_context = getContextbyId(call_site.second->getParent(), call_site.first.getId());
 					N call_node = call_site.second;
           DBG(llvm::errs() << "call_site: call node " << call_site.first.getId() << ":"  << call_node->getParent()->getName() << ":" << call_node->getName() << "\n";)
-          // calling_context.get().addToWorklist(call_node);
+          if(calling_context.get().getLastWorklist() == NULL)
+            calling_context.get().addToWorklist(call_node);
 					workList.push_back(calling_context);
 				}
 			}

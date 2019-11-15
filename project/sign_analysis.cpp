@@ -144,6 +144,10 @@ namespace llvm {
     return op1 == op2;
   }
 
+  bool SignAnalysis::isReturnEqual(Sign op1, Sign op2) {
+    return op1[RETURN] == op2[RETURN];
+  }
+
   Function* SignAnalysis::getEntryMethod(void) {
     // DBG(errs() << "here" << "\n" << module->getFunction("main")->getName;)
     return module->getFunction("main");
