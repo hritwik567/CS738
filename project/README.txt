@@ -12,3 +12,9 @@ https://github.com/sampsyo/llvm-pass-skeleton/issues/7#issuecomment-201438757
 
 TODO
 Not Handled phi nodes in Sign Analysis Might break
+
+To compile and run the code:
+$ ./run.sh <tests/filename.c>
+
+Ex:
+$ ./run.sh tests/sign_test1.c
