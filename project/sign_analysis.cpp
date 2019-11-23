@@ -111,6 +111,9 @@ namespace llvm {
       }
     } else if(isa<BranchInst>(*Insn)) {
       return std::make_pair(BRANCH, SIGN::BOTTOM);
+    } else if(isa<AllocaInst>(*Insn)) {
+      LHS = dyn_cast<Value>(Insn);
+      return std::make_pair(LHS->getName(), SIGN::TOP); 
     } else {
       LHS = dyn_cast<Value>(Insn);
       return std::make_pair(LHS->getName(), SIGN::BOTTOM);
@@ -145,7 +148,10 @@ namespace llvm {
   }
 
   bool SignAnalysis::isReturnEqual(Sign op1, Sign op2) {
-    return op1[RETURN] == op2[RETURN];
+    bool in_op1 = op1.find(RETURN) != op1.end();
+    bool in_op2 = op2.find(RETURN) != op2.end();
+    if(in_op1 and in_op2) return op1[RETURN] == op2[RETURN];
+    return isEqual(op1, op2);
   }
 
   Function* SignAnalysis::getEntryMethod(void) {
@@ -170,9 +176,10 @@ namespace llvm {
       std::pair<StringRef, SIGN> p = signOf(Insn, out_value);
       if(p.first != BRANCH)
         out_value[p.first] = p.second;
-      // for(auto &x : out_value) {
-      //   DBG(errs() << x.first << " " << SIGN_toString(x.second) << "; ";)
-      // }
+      for(auto &x : out_value) {
+        DBG(errs() << x.first << " " << SIGN_toString(x.second) << "; ";)
+      }
+      DBG(errs() << "\n\n";)
     }
 
     DBG(errs() << "\nIn normalFlowFunction out_value: " << "\n";)

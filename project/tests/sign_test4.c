@@ -9,7 +9,7 @@ int g(int u) {
 
 int f(int a, int b) {
   int c;
-  if(0) {
+  if(1) {
     c = g(10);
   }
   return c;
